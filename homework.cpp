@@ -23,6 +23,7 @@ int main()
     {
        y += x;
        x--;
+       z++;
     }
     
     return 0;

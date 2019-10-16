@@ -72,6 +72,9 @@ while.body:                                       ; preds = %while.cond
   %8 = load i32, i32* %x, align 4
   %dec = add nsw i32 %8, -1
   store i32 %dec, i32* %x, align 4
+  %9 = load i32, i32* %z, align 4
+  %inc = add nsw i32 %9, 1
+  store i32 %inc, i32* %z, align 4
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond

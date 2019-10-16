@@ -39,17 +39,20 @@ if.else:                                          ; preds = %entry
 
 if.end:                                           ; preds = %if.else, %if.then
   %y.0 = phi i32 [ 10, %if.then ], [ 16, %if.else ]
+  %z.0 = phi i32 [ 1, %if.then ], [ 2, %if.else ]
   br label %while.cond
 
 while.cond:                                       ; preds = %while.body, %if.end
   %y.1 = phi i32 [ %y.0, %if.end ], [ %add, %while.body ]
   %x.0 = phi i32 [ 10, %if.end ], [ %dec, %while.body ]
+  %z.1 = phi i32 [ %z.0, %if.end ], [ %inc, %while.body ]
   %cmp1 = icmp ne i32 %x.0, 1
   br i1 %cmp1, label %while.body, label %while.end
 
 while.body:                                       ; preds = %while.cond
   %add = add nsw i32 %y.1, %x.0
   %dec = add nsw i32 %x.0, -1
+  %inc = add nsw i32 %z.1, 1
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
