@@ -1,7 +1,7 @@
 # Note
 目录下 [*homework.cpp*](/homework.cpp) 是本次分析的源程序，[*homework.ll*](/homework.ll)是经过LLVM编译过后的可读的IR前端文件，编译的命令``` clang -Xclang -disable-O0-optnone -S -emit-llvm homework.cpp -o homework.ll ``` 
 
-虽然LLVM IR是SSA形式的，但是SSA构造算法并不高效，需要各种复杂数据结构，而这些导致前端在生成SSA形式的IR时候十分低效，实际上为了提高前端执行效率，LLVM是将构造SSA的工作从前端分离出来，借助“memory不是SSA value”的特点，把局部变量生成alloca/load/store形式。
+虽然LLVM IR是SSA形式的，但是这种SSA并不是完全的SSA形式。原因是SSA构造算法需要各种复杂数据结构，而这些导致前端在生成SSA形式的IR时候十分低效，实际上为了提高前端执行效率，LLVM是将构造SSA的工作从前端分离出来，借助“memory不是SSA value”的特点，把局部变量生成alloca/load/store形式。
 
 这样对局部变量的读写就跟对普通内存的读写一样，不需要SSA形式，这也是为什么我们会在[*homework.ll*](/homework.ll)文件中看到alloca、store、load等操作是直接对变量进行。而为了能够让IR真正进入SSA的形式，需要对[*homework.ll*](/homework.ll)文件进行进一步处理，这里用到LLVM中mem2reg pass，执行命令```opt -mem2reg -S homework.ll -o homework-mem2reg.ll``` 就可以得到真正的SSA形式文件[*homework-mem2reg.ll*](/homework-mem2reg.ll)
 
@@ -22,5 +22,5 @@
   %dec = add nsw i32 %x.0, -1
   %inc = add nsw i32 %z.1, 1
 ```
-对```x```,```y```和```z```变量都进行了SSA的转换，出现```%x.0```,```%y.0```,```%y.1```,```%z.0```,```%z.1```等SSA后的变量，并源代码进行了优化，而对于```ptr```变量则没有进行SSA的转换,因而没有出现在[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中。
+对```x```,```y```和```z```变量都进行了SSA的转换，出现```%x.0```,```%y.0```,```%y.1```,```%z.0```,```%z.1```等SSA后的变量，并对源代码进行了优化，而对于```ptr```变量则没有进行SSA的转换,因而没有出现在[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中。
 
