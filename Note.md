@@ -22,5 +22,5 @@
   %dec = add nsw i32 %x.0, -1
   %inc = add nsw i32 %z.1, 1
 ```
-对```x```,```y```和```z```变量都进行了SSA的转换并进行了优化，而对于```ptr```变量则没有进行SSA的转换,因而没有出现在[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中。
+对```x```,```y```和```z```变量都进行了SSA的转换，出现```%x.0```,```%y.0```,```%y.1```,```%z.0```,```%z.1```等SSA后的变量，并源代码进行了优化，而对于```ptr```变量则没有进行SSA的转换,因而没有出现在[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中。
 
