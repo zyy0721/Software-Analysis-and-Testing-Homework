@@ -25,38 +25,29 @@ declare dso_local void @_ZNSt8ios_base4InitD1Ev(%"class.std::ios_base::Init"*) u
 ; Function Attrs: nounwind
 declare dso_local i32 @__cxa_atexit(void (i8*)*, i8*, i8*) #3
 
-; Function Attrs: noinline norecurse nounwind uwtable
-define dso_local i32 @main() #4 {
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32* @_Z4testv() #4 {
 entry:
-  %cmp = icmp slt i32 10, 1
+  %x = alloca i32, align 4
+  store i32 10, i32* %x, align 4
+  %cmp = icmp slt i32 undef, 1
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
+  store i32 11, i32* %x, align 4
   br label %if.end
 
 if.else:                                          ; preds = %entry
+  store i32 22, i32* %x, align 4
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then
-  %y.0 = phi i32 [ 10, %if.then ], [ 16, %if.else ]
-  %z.0 = phi i32 [ 1, %if.then ], [ 2, %if.else ]
-  br label %while.cond
-
-while.cond:                                       ; preds = %while.body, %if.end
-  %y.1 = phi i32 [ %y.0, %if.end ], [ %add, %while.body ]
-  %x.0 = phi i32 [ 10, %if.end ], [ %dec, %while.body ]
-  %z.1 = phi i32 [ %z.0, %if.end ], [ %inc, %while.body ]
-  %cmp1 = icmp ne i32 %x.0, 1
-  br i1 %cmp1, label %while.body, label %while.end
-
-while.body:                                       ; preds = %while.cond
-  %add = add nsw i32 %y.1, %x.0
-  %dec = add nsw i32 %x.0, -1
-  %inc = add nsw i32 %z.1, 1
-  br label %while.cond
-
-while.end:                                        ; preds = %while.cond
-  ret i32 0
+  %y.0 = phi i32 [ 11, %if.then ], [ 22, %if.else ]
+  %0 = load i32, i32* %x, align 4
+  %add = add nsw i32 %0, 33
+  store i32 %add, i32* %x, align 4
+  %add1 = add nsw i32 %y.0, 33
+  ret i32* %x
 }
 
 ; Function Attrs: noinline uwtable
@@ -70,7 +61,7 @@ attributes #0 = { noinline uwtable "correctly-rounded-divide-sqrt-fp-math"="fals
 attributes #1 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #2 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #3 = { nounwind }
-attributes #4 = { noinline norecurse nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { noinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
 !llvm.module.flags = !{!0}
 !llvm.ident = !{!1}

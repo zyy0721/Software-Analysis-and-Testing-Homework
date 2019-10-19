@@ -1,30 +1,24 @@
 #include<iostream>
 using namespace std;
 
-int main()
+int* test()
 {
     int x,y,z;
     int* ptr;
     x = 10;
-    y = x;
     ptr = &x;
-    if( y < 1)
+    if( z < 1)
     {
-        z = 1;
+        x = 11;
+        y = 11;
     }
     else
     {
-        z = 2;
-        ptr = &y;
-        *ptr = 16;
-        y = *ptr;
+        x = 22;
+        y = 22;
     }
-    while (x != 1)
-    {
-       y += x;
-       x--;
-       z++;
-    }
+    x = x + 33;
+    y = y + 33;
     
-    return 0;
+    return ptr;
 }
