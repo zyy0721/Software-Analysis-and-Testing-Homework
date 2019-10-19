@@ -7,20 +7,22 @@
 
 ### 对比两个文件
 
-源程序[*homework.cpp*](/homework.cpp)和经过部分SSA后的文件[*homework-mem2reg.ll*](/homework-mem2reg.ll)，会发现在SSA形式的[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中
+源程序[*homework.cpp*](/homework.cpp)中构造了一个无法完全转化成SSA的程序，原因是在
 ```c++
-  %y.0 = phi i32 [ 10, %if.then ], [ 16, %if.else ]
-  %z.0 = phi i32 [ 1, %if.then ], [ 2, %if.else ]
+ptr = &x;
 ```
-```c++
-  %y.1 = phi i32 [ %y.0, %if.end ], [ %add, %while.body ]
-  %x.0 = phi i32 [ 10, %if.end ], [ %dec, %while.body ]
-  %z.1 = phi i32 [ %z.0, %if.end ], [ %inc, %while.body ]
-```
-```c++
-  %add = add nsw i32 %y.1, %x.0
-  %dec = add nsw i32 %x.0, -1
-  %inc = add nsw i32 %z.1, 1
-```
-对```x```,```y```和```z```变量都进行了SSA的转换，出现```%x.0```,```%y.0```,```%y.1```,```%z.0```,```%z.1```等SSA后的变量，并对源代码进行了优化，而对于```ptr```变量则没有进行SSA的转换,因而没有出现在[*homework-mem2reg.ll*](/homework-mem2reg.ll)文件中。
+这段代码中，对x变量进行了取地址的操作，因而x就成为了address-taken类型的变量，而SSA不对该类型变量进行转化。
 
+为了能够与之形成对比，程序中定义了一个变量```y```,不进行取地址的操作，并在上述代码之后与x变量执行相同的操作。
+
+对比不是完全SSA形式的文件[*homework.ll*](/homework.ll)会发现在经过部分SSA后的文件[*homework-mem2reg.ll*](/homework-mem2reg.ll)中
+```c++
+  %y.0 = phi i32 [ 11, %if.then ], [ 22, %if.else ]
+  %0 = load i32, i32* %x, align 4
+  %add = add nsw i32 %0, 33
+  store i32 %add, i32* %x, align 4
+  %add1 = add nsw i32 %y.0, 33
+  ret i32* %x
+```
+
+```x```变量没有进行SSA的转换和优化，即其内存位置没有，仍然用alloca/load/store对其进行操作，而对```y```变量进行了SSA的转换和优化操作，即其内存位置发生了变化。
